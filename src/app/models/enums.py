@@ -1,7 +1,11 @@
+"""Shared enum types used across persistence, runtime, and API layers."""
+
 from enum import Enum
 
 
 class TaskLifecycleState(str, Enum):
+    """Canonical lifecycle states a task can occupy."""
+
     CREATED = "created"
     QUEUED = "queued"
     RUNNING = "running"
@@ -13,6 +17,8 @@ class TaskLifecycleState(str, Enum):
 
 
 class FailureReasonCode(str, Enum):
+    """Normalized terminal and suspension failure codes."""
+
     STEP_LIMIT_EXCEEDED = "step_limit_exceeded"
     TIMEOUT_EXCEEDED = "timeout_exceeded"
     TOOL_VALIDATION_FAILED = "tool_validation_failed"
@@ -23,6 +29,8 @@ class FailureReasonCode(str, Enum):
 
 
 class TaskEventType(str, Enum):
+    """Structured event types emitted during task execution."""
+
     CREATED = "created"
     STATE_CHANGED = "state_changed"
     MODEL_REQUESTED = "model_requested"

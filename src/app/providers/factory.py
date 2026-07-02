@@ -1,3 +1,5 @@
+"""Factory for selecting the active model-provider implementation."""
+
 from app.core.settings import Settings
 from app.providers.base import ModelProvider
 from app.providers.hosted import OpenAICompatibleProvider
@@ -5,6 +7,7 @@ from app.providers.mock import MockModelProvider
 
 
 def build_model_provider(settings: Settings) -> ModelProvider:
+    """Instantiate the provider configured for the current deployment."""
     if settings.hosted_model_provider == "mock":
         return MockModelProvider()
     if settings.hosted_model_provider == "openai_compatible":

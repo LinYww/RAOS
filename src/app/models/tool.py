@@ -1,3 +1,5 @@
+"""ORM models for tool definitions and invocation audits."""
+
 from datetime import UTC, datetime
 from uuid import uuid4
 
@@ -8,6 +10,8 @@ from app.core.database import Base
 
 
 class ToolDefinition(Base):
+    """Persisted description of a tool exposed to the runtime."""
+
     __tablename__ = "tool_definitions"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
@@ -25,6 +29,8 @@ class ToolDefinition(Base):
 
 
 class ToolInvocation(Base):
+    """Audit record for one tool invocation made by a task attempt."""
+
     __tablename__ = "tool_invocations"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))

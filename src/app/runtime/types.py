@@ -1,3 +1,5 @@
+"""Shared runtime dataclasses for execution inputs, outputs, and events."""
+
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from uuid import UUID, uuid4
@@ -7,6 +9,8 @@ from app.models.enums import FailureReasonCode, TaskLifecycleState
 
 @dataclass(slots=True)
 class RuntimeCheckpointMetadata:
+    """Operator-visible metadata stored alongside each runtime checkpoint."""
+
     step_index: int
     max_steps: int
     timeout_seconds: int
@@ -14,12 +18,16 @@ class RuntimeCheckpointMetadata:
 
 @dataclass(slots=True)
 class RuntimeResult:
+    """Minimal state/failure tuple used by transition helpers."""
+
     state: TaskLifecycleState
     failure_reason: FailureReasonCode | None = None
 
 
 @dataclass(slots=True)
 class RuntimeExecutionInput:
+    """Normalized input required to execute one task attempt."""
+
     task_id: str
     attempt_id: str
     agent_id: str
@@ -32,6 +40,8 @@ class RuntimeExecutionInput:
 
 @dataclass(slots=True)
 class RuntimeEventRecord:
+    """Structured runtime event emitted during task execution."""
+
     sequence_number: int
     event_type: str
     payload: dict
@@ -41,6 +51,8 @@ class RuntimeEventRecord:
 
 @dataclass(slots=True)
 class RuntimeExecutionOutput:
+    """Terminal or suspended result returned by the runtime loop."""
+
     state: TaskLifecycleState
     failure_reason: FailureReasonCode | None
     step_count: int

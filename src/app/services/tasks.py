@@ -1,3 +1,5 @@
+"""Task orchestration service that bridges API, runtime, and persistence."""
+
 from __future__ import annotations
 
 from datetime import UTC, datetime
@@ -23,6 +25,8 @@ from app.tools.gateway import ToolCall, ToolExecutionRecord
 
 
 class TaskService:
+    """Coordinate task submission, execution, and operator actions."""
+
     def __init__(self, session: Session) -> None:
         self._session = session
         self._tasks = TaskRepository(session)
@@ -30,6 +34,7 @@ class TaskService:
         self._tools = ToolRepository(session)
 
     def submit(self, payload: TaskCreateRequest) -> Task:
+        """Create a task, seed its first attempt, and execute it immediately."""
         agent = self._agents.get(str(payload.agent_id))
         if agent is None:
             raise ValueError("Agent not found.")
@@ -58,6 +63,7 @@ class TaskService:
         return self._tasks.get_task(task.id) or task
 
     def execute_attempt(self, task_id: str, attempt_id: str) -> Task:
+        """Execute a single persisted task attempt through the runtime."""
         task = self._tasks.get_task(task_id)
         attempt = self._tasks.get_attempt(attempt_id)
         if task is None or attempt is None:
@@ -127,18 +133,23 @@ class TaskService:
         return task
 
     def list(self, *, state: str | None = None) -> list[Task]:
+        """List tasks for operator-facing APIs."""
         return self._tasks.list_tasks(state=state)
 
     def get(self, task_id: str) -> Task | None:
+        """Fetch one task by identifier."""
         return self._tasks.get_task(task_id)
 
     def events(self, task_id: str) -> list[TaskEvent]:
+        """Return the persisted event history for a task."""
         return self._tasks.list_events(task_id)
 
     def pause(self, task_id: str) -> Task:
+        """Pause a task through the control-plane transition rules."""
         return self._apply_transition(task_id, action="pause")
 
     def resume(self, task_id: str, payload: TaskResumeRequest | None = None) -> Task:
+        """Resume a paused task and continue execution from the latest attempt."""
         task = self._apply_transition(task_id, action="resume", reason=payload.reason if payload else None)
         latest_attempt = self._tasks.latest_attempt_for_task(task_id)
         if latest_attempt:
@@ -147,9 +158,11 @@ class TaskService:
         return refreshed or task
 
     def cancel(self, task_id: str) -> Task:
+        """Cancel a task through the control-plane transition rules."""
         return self._apply_transition(task_id, action="cancel")
 
     def retry(self, task_id: str, payload: TaskRetryRequest) -> Task:
+        """Create a fresh attempt for a previously executed task."""
         task = self._tasks.get_task(task_id)
         if task is None:
             raise ValueError("Task not found.")
@@ -177,6 +190,7 @@ class TaskService:
         return refreshed or task
 
     def _apply_transition(self, task_id: str, *, action: str, reason: str | None = None) -> Task:
+        """Apply a control-plane mutation and persist its checkpoint effects."""
         task = self._tasks.get_task(task_id)
         latest_attempt = self._tasks.latest_attempt_for_task(task_id)
         if task is None or latest_attempt is None:
@@ -214,6 +228,7 @@ class TaskService:
         return task
 
     def _execute_tool_call(self, execution_input: RuntimeExecutionInput, tool_call: ToolCall) -> ToolExecutionRecord:
+        """Dispatch a runtime tool call and persist its audit trail."""
         gateway = get_tool_gateway()
         context = ToolExecutionContext(
             task_id=execution_input.task_id,
@@ -239,6 +254,7 @@ class TaskService:
         return record
 
     def _append_event(self, task_id: str, attempt_id: str | None, event_type: TaskEventType, payload: dict) -> TaskEvent:
+        """Create and persist the next ordered event for a task."""
         event = TaskEvent(
             task_id=task_id,
             task_attempt_id=attempt_id,
@@ -250,6 +266,7 @@ class TaskService:
 
 
 def _normalize_messages(payload: dict) -> list[dict]:
+    """Normalize task input into the message transcript expected by the runtime."""
     if payload.get("messages"):
         return payload["messages"]
     prompt = payload.get("prompt")

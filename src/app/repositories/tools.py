@@ -1,3 +1,5 @@
+"""Persistence operations for tool definitions and invocations."""
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -5,10 +7,13 @@ from app.models.tool import ToolDefinition, ToolInvocation
 
 
 class ToolRepository:
+    """Manage persisted tool metadata and invocation audit rows."""
+
     def __init__(self, session: Session) -> None:
         self._session = session
 
     def upsert_definition(self, definition: ToolDefinition) -> ToolDefinition:
+        """Insert or refresh a built-in tool definition by name."""
         existing = self._session.scalars(
             select(ToolDefinition).where(ToolDefinition.name == definition.name)
         ).first()
@@ -28,11 +33,13 @@ class ToolRepository:
         return existing
 
     def get_by_name(self, tool_name: str) -> ToolDefinition | None:
+        """Fetch a tool definition by its public name."""
         return self._session.scalars(
             select(ToolDefinition).where(ToolDefinition.name == tool_name)
         ).first()
 
     def create_invocation(self, invocation: ToolInvocation) -> ToolInvocation:
+        """Persist one tool invocation audit record."""
         self._session.add(invocation)
         self._session.flush()
         return invocation

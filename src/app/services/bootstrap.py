@@ -1,3 +1,5 @@
+"""Startup helpers that seed persistent runtime metadata."""
+
 from sqlalchemy.orm import Session
 
 from app.models.tool import ToolDefinition
@@ -6,6 +8,7 @@ from app.tools.bootstrap import get_tool_registry
 
 
 def bootstrap_builtin_tools(session: Session) -> None:
+    """Mirror built-in tool definitions into the database."""
     repository = ToolRepository(session)
     for definition in get_tool_registry().definitions():
         repository.upsert_definition(

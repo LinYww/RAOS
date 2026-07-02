@@ -1,3 +1,5 @@
+"""ORM models for tasks, task attempts, and task events."""
+
 from datetime import UTC, datetime
 from uuid import uuid4
 
@@ -9,6 +11,8 @@ from app.models.enums import FailureReasonCode, TaskEventType, TaskLifecycleStat
 
 
 class Task(Base):
+    """Top-level task row visible to operators and APIs."""
+
     __tablename__ = "tasks"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
@@ -33,6 +37,8 @@ class Task(Base):
 
 
 class TaskAttempt(Base):
+    """One execution attempt belonging to a task."""
+
     __tablename__ = "task_attempts"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))
@@ -53,6 +59,8 @@ class TaskAttempt(Base):
 
 
 class TaskEvent(Base):
+    """Immutable event row describing task lifecycle activity."""
+
     __tablename__ = "task_events"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))

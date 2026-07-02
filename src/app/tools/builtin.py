@@ -1,3 +1,5 @@
+"""Built-in tool handlers shipped with the bootstrap runtime."""
+
 import subprocess
 from pathlib import Path
 from urllib import request
@@ -7,6 +9,7 @@ from app.tools.exceptions import ToolExecutionError
 
 
 def read_file_tool(arguments: dict, context: ToolExecutionContext) -> ToolInvocationResult:
+    """Read a UTF-8 text file from the current workspace root."""
     workspace_root = Path.cwd().resolve()
     target = (workspace_root / arguments["path"]).resolve()
     # Resolve against cwd and then re-check ancestry to block path traversal via
@@ -27,6 +30,7 @@ def read_file_tool(arguments: dict, context: ToolExecutionContext) -> ToolInvoca
 
 
 def shell_exec_tool(arguments: dict, context: ToolExecutionContext) -> ToolInvocationResult:
+    """Execute an argv-style subprocess without invoking a shell parser."""
     command = arguments["command"]
     if not isinstance(command, list) or not all(isinstance(item, str) for item in command):
         raise ToolExecutionError("Shell command must be a list of strings.")
@@ -52,6 +56,7 @@ def shell_exec_tool(arguments: dict, context: ToolExecutionContext) -> ToolInvoc
 
 
 def http_fetch_tool(arguments: dict, context: ToolExecutionContext) -> ToolInvocationResult:
+    """Fetch a text-like HTTP resource with a bounded response body."""
     req = request.Request(arguments["url"], method="GET")
     with request.urlopen(req, timeout=arguments.get("timeout_seconds", 15)) as response:
         body = response.read().decode("utf-8", errors="replace")

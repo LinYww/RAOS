@@ -1,3 +1,5 @@
+"""Control-plane state transitions applied outside the model loop."""
+
 from dataclasses import dataclass
 
 from app.models.enums import FailureReasonCode, TaskEventType, TaskLifecycleState
@@ -6,6 +8,8 @@ from app.runtime.types import RuntimeEventRecord
 
 @dataclass(slots=True)
 class RuntimeTransitionResult:
+    """State mutation plus the checkpoint and event it produced."""
+
     state: TaskLifecycleState
     checkpoint: dict
     event: RuntimeEventRecord
@@ -13,6 +17,7 @@ class RuntimeTransitionResult:
 
 
 def pause_task(*, current_state: TaskLifecycleState, checkpoint: dict) -> RuntimeTransitionResult:
+    """Pause an active task and mark the checkpoint as operator-controlled."""
     _ensure_state(
         action="pause",
         current_state=current_state,
@@ -38,6 +43,7 @@ def pause_task(*, current_state: TaskLifecycleState, checkpoint: dict) -> Runtim
 
 
 def resume_task(*, current_state: TaskLifecycleState, checkpoint: dict) -> RuntimeTransitionResult:
+    """Resume a task previously paused by an operator action."""
     _ensure_state(
         action="resume",
         current_state=current_state,
@@ -55,6 +61,7 @@ def resume_task(*, current_state: TaskLifecycleState, checkpoint: dict) -> Runti
 
 
 def cancel_task(*, current_state: TaskLifecycleState, checkpoint: dict) -> RuntimeTransitionResult:
+    """Cancel a task while preserving enough state for later audit."""
     _ensure_state(
         action="cancel",
         current_state=current_state,
@@ -85,6 +92,7 @@ def _ensure_state(
     current_state: TaskLifecycleState,
     allowed_states: set[TaskLifecycleState],
 ) -> None:
+    """Reject control-plane actions that are invalid for the current state."""
     if current_state not in allowed_states:
         raise ValueError(f"Cannot {action} task from state {current_state.value}.")
 
@@ -95,6 +103,7 @@ def _operator_event(
     from_state: TaskLifecycleState,
     to_state: TaskLifecycleState,
 ) -> RuntimeEventRecord:
+    """Construct a normalized operator-action event payload."""
     return RuntimeEventRecord(
         sequence_number=1,
         event_type=TaskEventType.OPERATOR_ACTION.value,

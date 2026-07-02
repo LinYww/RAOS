@@ -1,3 +1,5 @@
+"""ORM model for runtime checkpoints."""
+
 from datetime import UTC, datetime
 from uuid import uuid4
 
@@ -8,6 +10,8 @@ from app.core.database import Base
 
 
 class Checkpoint(Base):
+    """Durable snapshot of a task attempt's latest runtime state."""
+
     __tablename__ = "checkpoints"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))

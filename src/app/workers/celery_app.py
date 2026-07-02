@@ -1,3 +1,5 @@
+"""Celery integration for asynchronous runtime execution."""
+
 from celery import Celery
 
 from app.core.settings import get_settings
@@ -19,6 +21,7 @@ celery_app.conf.task_store_eager_result = settings.celery_task_store_eager_resul
 
 @celery_app.task(name="runtime.execute_task")
 def execute_task(payload: dict) -> dict:
+    """Run a serialized runtime payload through the configured worker runtime."""
     runtime = build_runtime(settings)
     result = runtime.run(RuntimeExecutionInput(**payload))
     return {

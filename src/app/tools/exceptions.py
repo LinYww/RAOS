@@ -1,9 +1,11 @@
+"""Custom exceptions raised by the tool subsystem."""
+
 class ToolValidationError(ValueError):
-    """Raised when a tool definition or tool invocation payload is invalid."""
+    """Raised when a tool definition or payload violates the declared contract."""
 
 
 class ToolPermissionError(PermissionError):
-    """Raised when a tool invocation is not authorized."""
+    """Raised when a tool call is outside the caller's approved scopes."""
 
 
 class ToolExecutionError(RuntimeError):

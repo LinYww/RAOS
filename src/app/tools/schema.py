@@ -1,7 +1,10 @@
+"""Minimal schema-validation helpers for tool payloads."""
+
 from app.tools.exceptions import ToolValidationError
 
 
 def validate_payload(schema: dict, payload: dict, *, label: str) -> None:
+    """Validate a dict payload against the supported subset of JSON schema."""
     if not schema:
         return
     schema_type = schema.get("type")
@@ -27,6 +30,7 @@ def validate_payload(schema: dict, payload: dict, *, label: str) -> None:
 
 
 def _matches_type(expected_type: str, value: object) -> bool:
+    """Map JSON-schema scalar names to simple Python type predicates."""
     type_map = {
         "string": lambda item: isinstance(item, str),
         "integer": lambda item: isinstance(item, int) and not isinstance(item, bool),

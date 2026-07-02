@@ -1,3 +1,5 @@
+"""Pydantic schemas used by the agent-management API."""
+
 from datetime import datetime
 from uuid import UUID
 
@@ -5,10 +7,14 @@ from pydantic import BaseModel, Field
 
 
 class AgentResponseModel(BaseModel):
+    """Base response model configured for ORM object serialization."""
+
     model_config = {"from_attributes": True}
 
 
 class AgentCreateRequest(BaseModel):
+    """Payload accepted when registering a new agent."""
+
     name: str = Field(min_length=1, max_length=200)
     version: str = Field(default="v1", min_length=1, max_length=50)
     system_prompt: str = Field(min_length=1)
@@ -18,6 +24,8 @@ class AgentCreateRequest(BaseModel):
 
 
 class AgentDetailResponse(AgentResponseModel):
+    """Detailed representation of an agent returned by the API."""
+
     id: UUID
     name: str
     version: str
@@ -30,4 +38,6 @@ class AgentDetailResponse(AgentResponseModel):
 
 
 class AgentListResponse(BaseModel):
+    """Collection wrapper for agent list endpoints."""
+
     items: list[AgentDetailResponse]

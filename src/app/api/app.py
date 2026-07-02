@@ -1,3 +1,5 @@
+"""FastAPI application factory and startup lifecycle hooks."""
+
 from collections.abc import Iterator
 from contextlib import contextmanager
 
@@ -13,6 +15,7 @@ from app.services.bootstrap import bootstrap_builtin_tools
 
 @contextmanager
 def app_lifespan(_: FastAPI) -> Iterator[None]:
+    """Initialize durable resources and seed built-in tool definitions."""
     init_database()
     session = session_scope()
     try:
@@ -24,6 +27,7 @@ def app_lifespan(_: FastAPI) -> Iterator[None]:
 
 
 def create_app() -> FastAPI:
+    """Build the HTTP application using the current settings snapshot."""
     settings = get_settings()
     app = FastAPI(
         title=settings.app_name,

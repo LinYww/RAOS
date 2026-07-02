@@ -1,3 +1,5 @@
+"""Hosted model adapter for OpenAI-compatible chat endpoints."""
+
 import json
 from urllib import error, request
 
@@ -13,6 +15,7 @@ class OpenAICompatibleProvider(ModelProvider):
         self._model_name = model_name
 
     def generate(self, request_payload: ModelRequest) -> ModelResponse:
+        """Translate a normalized request into a hosted chat completion call."""
         payload = {
             "model": self._model_name,
             "messages": self._build_messages(request_payload),
@@ -38,6 +41,7 @@ class OpenAICompatibleProvider(ModelProvider):
         )
 
     def _build_messages(self, request_payload: ModelRequest) -> list[dict]:
+        """Combine the system prompt and conversation history into provider format."""
         messages: list[dict] = []
         if request_payload.system_prompt:
             messages.append({"role": "system", "content": request_payload.system_prompt})
@@ -45,6 +49,7 @@ class OpenAICompatibleProvider(ModelProvider):
         return messages
 
     def _post_json(self, path: str, payload: dict) -> dict:
+        """Perform the HTTP request and normalize transport failures."""
         headers = {"Content-Type": "application/json"}
         if self._api_key:
             headers["Authorization"] = f"Bearer {self._api_key}"

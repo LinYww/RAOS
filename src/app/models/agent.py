@@ -1,3 +1,5 @@
+"""ORM model for persisted agent definitions."""
+
 from datetime import UTC, datetime
 from uuid import uuid4
 
@@ -8,6 +10,8 @@ from app.core.database import Base
 
 
 class Agent(Base):
+    """Registered agent configuration used to execute tasks."""
+
     __tablename__ = "agents"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid4()))

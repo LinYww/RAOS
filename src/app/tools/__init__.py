@@ -1,1 +1,1 @@
-"""Tool package."""
+"""Tooling contracts, registry, and execution gateway."""

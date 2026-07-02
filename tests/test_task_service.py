@@ -1,3 +1,5 @@
+"""Integration-style tests for the task orchestration service."""
+
 from app.core.database import init_database, session_scope
 from app.models.agent import Agent
 from app.services.bootstrap import bootstrap_builtin_tools
@@ -6,6 +8,7 @@ from app.schemas.task import TaskCreateRequest
 
 
 def test_task_service_runs_mock_task_to_terminal_state() -> None:
+    """Submitting a task should drive it to a terminal state with the mock provider."""
     init_database()
     session = session_scope()
     try:

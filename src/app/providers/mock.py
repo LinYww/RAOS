@@ -1,3 +1,5 @@
+"""Local model provider used for deterministic development and tests."""
+
 from app.providers.base import ModelProvider, ModelRequest, ModelResponse
 
 
@@ -5,6 +7,7 @@ class MockModelProvider(ModelProvider):
     """Local provider used to keep the MVP runnable without external credentials."""
 
     def generate(self, request: ModelRequest) -> ModelResponse:
+        """Return canned behavior based on simple message prefixes."""
         last_message = request.messages[-1] if request.messages else {"role": "user", "content": ""}
         content = last_message.get("content", "")
 

@@ -1,1 +1,1 @@
-"""Repository package."""
+"""Persistence adapters around SQLAlchemy sessions."""

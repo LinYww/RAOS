@@ -1,3 +1,5 @@
+"""Application settings loaded from environment variables."""
+
 from functools import lru_cache
 
 from pydantic import Field
@@ -5,6 +7,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    """Runtime configuration shared by the API, workers, and execution loop."""
+
     app_name: str = "RA_OS Agent Runtime"
     app_version: str = "0.1.0"
     debug: bool = False
@@ -31,4 +35,5 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
+    """Return a cached settings object for the current process."""
     return Settings()

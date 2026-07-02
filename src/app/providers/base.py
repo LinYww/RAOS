@@ -1,8 +1,12 @@
+"""Normalized model-provider request and response contracts."""
+
 from dataclasses import dataclass, field
 
 
 @dataclass(slots=True)
 class ModelRequest:
+    """Provider-agnostic prompt payload consumed by runtime adapters."""
+
     messages: list[dict]
     system_prompt: str
     tools: list[dict] = field(default_factory=list)
@@ -13,6 +17,8 @@ class ModelRequest:
 
 @dataclass(slots=True)
 class ModelResponse:
+    """Provider-agnostic completion payload returned to the runtime."""
+
     output_text: str
     tool_calls: list[dict] = field(default_factory=list)
     stop_reason: str | None = None
@@ -21,7 +27,10 @@ class ModelResponse:
 
 
 class ModelProvider:
+    """Interface implemented by all model backends."""
+
     def generate(self, request: ModelRequest) -> ModelResponse:
+        """Produce a normalized model response for one runtime step."""
         raise NotImplementedError
 
 

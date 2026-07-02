@@ -1,0 +1,83 @@
+<mxfile host="app.diagrams.net" modified="2026-06-01T00:00:00.000Z" agent="Codex" version="24.7.17">
+  <diagram id="agent-os-architecture" name="Agent OS Architecture">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1080" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="u" value="操作员 / 外部系统" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="400" y="40" width="260" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="cp" value="控制平面&#xa;API / 管理入口 / 任务操作" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d9ead3;strokeColor=#38761d;" vertex="1" parent="1">
+          <mxGeometry x="400" y="160" width="260" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="ts" value="任务系统&#xa;Task / Attempt / Event / Checkpoint" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d9ead3;strokeColor=#38761d;" vertex="1" parent="1">
+          <mxGeometry x="400" y="290" width="260" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="rt" value="运行时内核&#xa;单 Agent 循环 / 步数限制 / 超时 / 停止规则" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d9ead3;strokeColor=#38761d;" vertex="1" parent="1">
+          <mxGeometry x="400" y="420" width="260" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="tg" value="工具网关&#xa;Schema 校验 / 权限范围 / 审计" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d9ead3;strokeColor=#38761d;" vertex="1" parent="1">
+          <mxGeometry x="90" y="560" width="280" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="mp" value="模型提供层&#xa;Mock / Hosted Provider 适配器" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d9ead3;strokeColor=#38761d;" vertex="1" parent="1">
+          <mxGeometry x="400" y="560" width="260" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="ps" value="持久化层&#xa;SQLAlchemy / SQLite / 状态存储" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d9ead3;strokeColor=#38761d;" vertex="1" parent="1">
+          <mxGeometry x="710" y="560" width="260" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="ex" value="执行环境&#xa;文件 / Shell / HTTP / 工作区" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d9ead3;strokeColor=#38761d;" vertex="1" parent="1">
+          <mxGeometry x="90" y="700" width="280" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="og" value="可观测性与治理&#xa;日志 / 指标 / 配额 / RBAC / 成本控制" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#bf9000;" vertex="1" parent="1">
+          <mxGeometry x="710" y="700" width="280" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="ma" value="多 Agent 编排&#xa;父任务 / 子任务 / 委派 / 结果汇总" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f4cccc;strokeColor=#990000;" vertex="1" parent="1">
+          <mxGeometry x="400" y="700" width="260" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="mm" value="记忆与工作区模型&#xa;短期上下文 / 长期记忆 / 资源视图" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f4cccc;strokeColor=#990000;" vertex="1" parent="1">
+          <mxGeometry x="400" y="840" width="260" height="90" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e1" edge="1" parent="1" source="u" target="cp" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="cp" target="ts" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="ts" target="rt" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="rt" target="tg" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="rt" target="mp" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="tg" target="ex" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="ts" target="ps" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="rt" target="ps" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="tg" target="ps" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=classic;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e10" value="后续" edge="1" parent="1" source="cp" target="og" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;endArrow=classic;strokeColor=#bf9000;fontColor=#bf9000;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e11" value="后续" edge="1" parent="1" source="rt" target="ma" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;endArrow=classic;strokeColor=#990000;fontColor=#990000;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e12" value="后续" edge="1" parent="1" source="ma" target="mm" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;endArrow=classic;strokeColor=#990000;fontColor=#990000;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e13" value="上下文" edge="1" parent="1" source="rt" target="mm" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;dashed=1;endArrow=classic;strokeColor=#990000;fontColor=#990000;">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,3 +1,5 @@
+"""Single-agent runtime loop that drives model and tool execution."""
+
 from time import monotonic
 from dataclasses import asdict
 
@@ -20,6 +22,7 @@ class SingleAgentRuntime:
         self._provider = provider
 
     def run(self, execution_input: RuntimeExecutionInput, tool_executor=None) -> RuntimeExecutionOutput:
+        """Execute the model loop until success, failure, or a waiting state."""
         started_at = monotonic()
         events: list[RuntimeEventRecord] = []
         messages = list(execution_input.messages)
@@ -193,6 +196,7 @@ class SingleAgentRuntime:
                 )
 
     def _append_event(self, events: list[RuntimeEventRecord], event_type: TaskEventType, payload: dict) -> None:
+        """Append an ordered runtime event to the in-memory event stream."""
         events.append(
             RuntimeEventRecord(
                 sequence_number=len(events) + 1,
@@ -211,6 +215,7 @@ class SingleAgentRuntime:
         output_text: str,
         checkpoint: dict,
     ) -> RuntimeExecutionOutput:
+        """Finalize the event stream and build the runtime output object."""
         self._append_event(
             events,
             TaskEventType.TERMINAL,
@@ -236,6 +241,7 @@ class SingleAgentRuntime:
         step_index: int,
         messages: list[dict],
     ) -> dict:
+        """Serialize the current runtime state into a durable checkpoint snapshot."""
         # The snapshot format is intentionally plain dict data so it can be stored
         # directly in the database and reused by operator transitions.
         checkpoint_metadata = RuntimeCheckpointMetadata(
@@ -253,6 +259,7 @@ class SingleAgentRuntime:
         }
 
     def _is_terminal_stop(self, stop_reason: str | None, output_text: str) -> bool:
+        """Interpret provider finish reasons into runtime terminal semantics."""
         if stop_reason in {None, "stop", "completed"}:
             # Hosted providers are inconsistent here; treat a plain text answer with
             # no further action requested as a successful terminal turn.

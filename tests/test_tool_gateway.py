@@ -1,3 +1,5 @@
+"""Tests for tool authorization, validation, and execution dispatch."""
+
 from app.tools.bootstrap import get_tool_gateway
 from app.tools.contracts import ToolExecutionContext
 from app.tools.exceptions import ToolPermissionError, ToolValidationError
@@ -5,6 +7,7 @@ from app.tools.gateway import ToolCall
 
 
 def make_context(*, scopes: list[str]) -> ToolExecutionContext:
+    """Build a minimal tool-execution context with the requested scopes."""
     return ToolExecutionContext(
         task_id="task-1",
         attempt_id="attempt-1",
@@ -14,6 +17,7 @@ def make_context(*, scopes: list[str]) -> ToolExecutionContext:
 
 
 def test_gateway_rejects_unauthorized_tool_invocation() -> None:
+    """Missing permission scopes should block tool execution."""
     gateway = get_tool_gateway()
     try:
         gateway.invoke(ToolCall(name="file.read", arguments={"path": "README.md"}), make_context(scopes=[]))
@@ -24,6 +28,7 @@ def test_gateway_rejects_unauthorized_tool_invocation() -> None:
 
 
 def test_gateway_rejects_invalid_tool_input() -> None:
+    """Schema validation should reject malformed tool arguments."""
     gateway = get_tool_gateway()
     try:
         gateway.invoke(ToolCall(name="file.read", arguments={}), make_context(scopes=["workspace.read"]))
@@ -34,6 +39,7 @@ def test_gateway_rejects_invalid_tool_input() -> None:
 
 
 def test_gateway_executes_file_read_tool() -> None:
+    """Authorized and valid tool calls should execute successfully."""
     gateway = get_tool_gateway()
     result = gateway.invoke(
         ToolCall(name="file.read", arguments={"path": "README.md"}),

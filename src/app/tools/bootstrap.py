@@ -1,3 +1,5 @@
+"""Bootstrap helpers for the built-in tool registry and gateway."""
+
 from functools import lru_cache
 
 from app.tools.builtin import http_fetch_tool, read_file_tool, shell_exec_tool
@@ -8,6 +10,7 @@ from app.tools.registry import ToolRegistry
 
 @lru_cache
 def get_tool_registry() -> ToolRegistry:
+    """Build and cache the registry containing all built-in tools."""
     registry = ToolRegistry()
     registry.register(
         ToolDefinitionContract(
@@ -92,4 +95,5 @@ def get_tool_registry() -> ToolRegistry:
 
 @lru_cache
 def get_tool_gateway() -> ToolGateway:
+    """Build and cache the gateway that fronts the built-in registry."""
     return ToolGateway(get_tool_registry())
